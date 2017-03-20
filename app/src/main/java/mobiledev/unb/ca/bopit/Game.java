@@ -42,13 +42,15 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         Random r = new Random();
         correctAction = r.nextInt(5) + 1; //1-5
 
-        // 3 seconds
+        // 3 seconds - why is this timer shit
         timer = new CountDownTimer(3000, 1000) {
+            TextView timeLeft = (TextView) findViewById(R.id.timer);
             public void onTick(long millisUntilFinished) {
-                //do nothing
+                timeLeft.setText("" + millisUntilFinished/1000);
             }
 
             public void onFinish() {
+                timeLeft.setText("" + 0);
                 resolve(0);
             }
         }.start();
