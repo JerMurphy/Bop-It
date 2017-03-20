@@ -11,14 +11,14 @@
     android:background="@drawable/background2">
 
     <TextView
+        android:id="@+id/action_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Hello World"
-        android:id="@+id/test_text"
         android:layout_below="@+id/game_imgview"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp" />
+        android:layout_marginTop="31dp"
+        android:text="Hello World"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ImageView
         android:layout_width="wrap_content"

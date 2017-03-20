@@ -1,6 +1,7 @@
 package mobiledev.unb.ca.bopit;
 
 import android.app.Activity;
+import android.os.CountDownTimer;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,15 +14,15 @@ import android.widget.TextView;
 
 public class Game extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
 
-    private static final String DEBUG_TAG = "Gestures";
+    private static final String DEBUG_TAG = "DEBUG";
     private GestureDetectorCompat mDetector;
     private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-    private static int currentMovement = 0;
-    ImageView img_view;
-    TextView scoreText;
-    int score = 0;
+    private static int correctAction = 0;
+    private ImageView img_view;
+    private int score = 0;
+    private TextView scoreText;
+    private CountDownTimer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,35 +40,72 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 
     public void start(){
         Random r = new Random();
-        int n = r.nextInt(5) + 1; //1-5
-        currentMovement = n;
+        correctAction = r.nextInt(5) + 1; //1-5
+
+        // 3 seconds
+        timer = new CountDownTimer(3000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                //do nothing
+            }
+
+            public void onFinish() {
+                resolve(0);
+            }
+        }.start();
 
         //tapped
-        if(n == 1){
+        if(correctAction == 1){
             img_view.setImageResource(R.drawable.tap_screen);
-            TextView text = (TextView) findViewById(R.id.test_text);
+            TextView text = (TextView) findViewById(R.id.action_text);
             text.setText("Tap Screen");
         }
-        else if (n == 2){ //left
+        else if (correctAction == 2){
             img_view.setImageResource(R.drawable.swipe_left);
-            TextView text = (TextView) findViewById(R.id.test_text);
+            TextView text = (TextView) findViewById(R.id.action_text);
             text.setText("Left Swipe");
         }
-        else if(n ==3){
+        else if(correctAction == 3){
             img_view.setImageResource(R.drawable.swipe_right);
-            TextView text = (TextView) findViewById(R.id.test_text);
+            TextView text = (TextView) findViewById(R.id.action_text);
             text.setText("Right Swipe");
         }
-        else if (n == 4){ //left
+        else if (correctAction == 4){
             img_view.setImageResource(R.drawable.swipe_up);
-            TextView text = (TextView) findViewById(R.id.test_text);
+            TextView text = (TextView) findViewById(R.id.action_text);
             text.setText("Up Swipe");
         }
-        else if (n == 5){ //left
+        else if (correctAction == 5){
             img_view.setImageResource(R.drawable.swipe_down);
-            TextView text = (TextView) findViewById(R.id.test_text);
+            TextView text = (TextView) findViewById(R.id.action_text);
             text.setText("Down Swipe");
         }
+        else if (correctAction == 6) {
+            //tilt left?
+            //remember to change random number generator!
+        }
+        else if (correctAction == 7) {
+            //tilt right?
+        }
+    }
+
+    // check to see if user inputted the correct action
+    public void resolve(int userAction) {
+        timer.cancel();
+
+        // congrats!
+        if (userAction == correctAction) {
+            score += 10;
+            scoreText.setText("Score: " + score);
+            start();
+        }
+        // you suck!
+        else {
+            TextView text = (TextView) findViewById(R.id.action_text);
+            text.setText("Click anywhere to restart!");
+            img_view.setImageResource(R.drawable.wrong);
+            correctAction = 0; // indicates game over
+        }
+
     }
 
     @Override
@@ -86,64 +124,28 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         try {
             if (Math.abs(e1.getY() - e2.getY()) > Math.abs(e1.getX() - e2.getX())) {
+                // up or down swipe
                 if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Log.d(DEBUG_TAG, "onScroll: " + e1.toString() + e2.toString());
-                    Log.d(DEBUG_TAG, "up confirmed");
-
-                    if (currentMovement == 4) {
-                        score += 10;
-                        scoreText.setText("Score: " + score);
-                        start();
-                    } else {
-
-                        img_view.setImageResource(R.drawable.wrong);
-                    }
-
+                    Log.d(DEBUG_TAG, "action: up swipe");
+                    resolve(4);
                 }
                 if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Log.d(DEBUG_TAG, "onScroll: " + e1.toString() + e2.toString());
-                    Log.d(DEBUG_TAG, "down confirmed");
-
-                    if (currentMovement == 5) {
-                        score += 10;
-                        scoreText.setText("Score: " + score);
-                        start();
-                    } else {
-
-                        img_view.setImageResource(R.drawable.wrong);
-                    }
+                    Log.d(DEBUG_TAG, "action: down swipe");
+                    resolve(5);
                 }
             } else {
                 // right to left swipe
                 if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Log.d(DEBUG_TAG, "onScroll: " + e1.toString() + e2.toString());
-                    Log.d(DEBUG_TAG, "left confirmed");
-
-                    if (currentMovement == 2) {
-                        score += 10;
-                        scoreText.setText("Score: " + score);
-                        start();
-                    } else {
-                        img_view.setImageResource(R.drawable.wrong);
-                    }
+                    Log.d(DEBUG_TAG, "action: left swipe");
+                    resolve(2);
                 }
                 // left to right swipe
                 else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE  && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Log.d(DEBUG_TAG, "onScroll: " + e1.toString() + e2.toString());
-                    Log.d(DEBUG_TAG, "right confirmed");
-
-                    if (currentMovement == 3) {
-                        score += 10;
-                        scoreText.setText("Score: " + score);
-                        start();
-                    } else {
-                        img_view.setImageResource(R.drawable.wrong);
-                    }
-                } else {
-                    Log.d(DEBUG_TAG, "onScroll: " + e1.toString() + e2.toString());
+                    Log.d(DEBUG_TAG, "action: right swipe");
+                    resolve(3);
                 }
             }
-        }catch(Exception e){
+        } catch(Exception e){
             Log.d(DEBUG_TAG, "Exception: " + e.getMessage());
         }
 
@@ -152,7 +154,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 
     @Override
     public void onLongPress(MotionEvent event) {
-            Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
+        Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
     }
 
     @Override
@@ -188,15 +190,16 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
     public boolean onSingleTapConfirmed(MotionEvent event) {
         Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + event.toString());
 
-        if(currentMovement == 1){
-            score += 10;
+        if (correctAction == 0) {
+            score = 0;
             scoreText.setText("Score: " + score);
             start();
-        } else{
-            img_view.setImageResource(R.drawable.wrong);
+        }
+        else {
+            resolve(1);
         }
 
-        return true;
+        return false;
     }
 
 }
