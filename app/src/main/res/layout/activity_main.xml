@@ -28,4 +28,15 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="MurMur Inc."
+        android:id="@+id/textView"
+        android:layout_alignBottom="@+id/pbutton"
+        android:layout_alignRight="@+id/pbutton"
+        android:layout_alignEnd="@+id/pbutton"
+        android:textColor="#ffffff" />
+
 </RelativeLayout>

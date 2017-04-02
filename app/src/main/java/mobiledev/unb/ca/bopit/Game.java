@@ -1,7 +1,14 @@
 package mobiledev.unb.ca.bopit;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
+import android.provider.MediaStore;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,10 +16,15 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import java.util.Random;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class Game extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener{
+import com.github.tbouron.shakedetector.library.ShakeDetector;
+
+public class Game extends Activity implements GestureDetector.OnGestureListener,
+        GestureDetector.OnDoubleTapListener{
 
     private static final String DEBUG_TAG = "DEBUG";
     private GestureDetectorCompat mDetector;
@@ -23,6 +35,11 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
     private int score = 0;
     private TextView scoreText;
     private CountDownTimer timer;
+    private CountDownTimer scoretimer;
+    private MediaPlayer mp;
+    private MediaPlayer mp1;
+    private ImageView star;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +51,25 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         mDetector.setOnDoubleTapListener(this);
         img_view = (ImageView) findViewById(R.id.game_imgview);
         scoreText = (TextView) findViewById(R.id.score);
+        mp = MediaPlayer.create(Game.this, R.raw.ding);
+        mp1 = MediaPlayer.create(Game.this, R.raw.wrong);
+        star = (ImageView) findViewById(R.id.starpts);
+        star.setVisibility(View.INVISIBLE);
+
+
+        ShakeDetector.create(this, new ShakeDetector.OnShakeListener() {
+            @Override
+            public void OnShake() {
+                resolve(6);
+            }
+        });
 
         start();
     }
 
     public void start(){
         Random r = new Random();
-        correctAction = r.nextInt(5) + 1; //1-5
+        correctAction = r.nextInt(6) + 1; //1-5
 
         // 3 seconds - why is this timer shit
         timer = new CountDownTimer(3000, 1000) {
@@ -51,6 +80,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 
             public void onFinish() {
                 timeLeft.setText("" + 0);
+                //comment this out for testing. removes timer
                 resolve(0);
             }
         }.start();
@@ -82,28 +112,42 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
             text.setText("Down Swipe");
         }
         else if (correctAction == 6) {
-            //tilt left?
-            //remember to change random number generator!
+            img_view.setImageResource(R.drawable.shake);
+            TextView text = (TextView) findViewById(R.id.action_text);
+            text.setText("Shake!");
         }
-        else if (correctAction == 7) {
-            //tilt right?
-        }
+
     }
 
     // check to see if user inputted the correct action
     public void resolve(int userAction) {
         timer.cancel();
 
+        scoretimer = new CountDownTimer(200,100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                star.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                star.setVisibility(View.INVISIBLE);
+            }
+        };
+
         // congrats!
         if (userAction == correctAction) {
+            scoretimer.start();
             score += 10;
             scoreText.setText("Score: " + score);
+            mp.start();
             start();
         }
         // you suck!
         else {
             TextView text = (TextView) findViewById(R.id.action_text);
             text.setText("Click anywhere to restart!");
+            mp1.start();
             img_view.setImageResource(R.drawable.wrong);
             correctAction = 0; // indicates game over
         }
@@ -203,5 +247,6 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 
         return false;
     }
+
 
 }
