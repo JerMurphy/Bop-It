@@ -2,6 +2,7 @@ package mobiledev.unb.ca.bopit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -33,12 +34,14 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
     private static int correctAction = 0;
     private ImageView img_view;
     private int score = 0;
+    private int volume = 0;
     private TextView scoreText;
     private CountDownTimer timer;
     private CountDownTimer scoretimer;
     private MediaPlayer mp;
     private MediaPlayer mp1;
     private ImageView star;
+    private ImageView bVolume;
 
 
     @Override
@@ -55,6 +58,24 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         mp1 = MediaPlayer.create(Game.this, R.raw.wrong);
         star = (ImageView) findViewById(R.id.starpts);
         star.setVisibility(View.INVISIBLE);
+
+        bVolume = (ImageView)findViewById(R.id.img_volume);
+        bVolume.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(volume == 0){
+                    mp.setVolume(0,0);
+                    volume++;
+                    bVolume.setImageResource(R.drawable.novolume);
+                }else{
+                    mp.setVolume(1,1);
+                    volume--;
+                    bVolume.setImageResource(R.drawable.volume);
+                }
+
+            }
+        });
 
 
         ShakeDetector.create(this, new ShakeDetector.OnShakeListener() {
