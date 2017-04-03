@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,17 +16,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        ImageView pbutton = (ImageView) findViewById(R.id.pbutton);
-
+        Button pbutton = (Button) findViewById(R.id.pbutton);
+        Button hsbutton = (Button) findViewById(R.id.hsbutton);
 
         pbutton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Game.class);
                 startActivity(intent);
+            }
+        });
 
+        hsbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Highscores.class);
+                startActivity(intent);
             }
         });
     }

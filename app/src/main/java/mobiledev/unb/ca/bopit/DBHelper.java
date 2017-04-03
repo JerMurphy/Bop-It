@@ -8,18 +8,18 @@ import android.util.Log;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
-    public static final String TABLE_NAME = "mytable";
+    public static final String TABLE_NAME = "highscores";
     final static String _ID = "_id";
-    public static final String ITEM = "item";
-    public static final String NUM = "number";
+    public static final String NAME = "name";
+    public static final String SCORE = "score";
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NAME + " (" + _ID
                     + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + ITEM + " TEXT, " +
-                    NUM + " INT);";
+                    + NAME + " TEXT, " +
+                    SCORE + " INT);";
     private static final String TAG = "DBHelper";
     private static final String DATABASE_NAME = "mydb";
-    //final static String[] COLUMNS = { _ID, ITEM, NUM };
+    final static String[] COLUMNS = { NAME, SCORE };
 
     DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

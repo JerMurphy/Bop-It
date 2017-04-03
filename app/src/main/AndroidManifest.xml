@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name="mobiledev.unb.ca.bopit.Game"></activity>
+        <activity android:name="mobiledev.unb.ca.bopit.Highscores"></activity>
     </application>
 
 </manifest>

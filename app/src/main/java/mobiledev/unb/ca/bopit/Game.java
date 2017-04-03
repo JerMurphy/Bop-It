@@ -2,6 +2,7 @@ package mobiledev.unb.ca.bopit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -146,7 +147,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         // you suck!
         else {
             TextView text = (TextView) findViewById(R.id.action_text);
-            text.setText("Click anywhere to restart!");
+            text.setText("Click anywhere to continue!");
             mp1.start();
             img_view.setImageResource(R.drawable.wrong);
             correctAction = 0; // indicates game over
@@ -232,14 +233,16 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         return true;
     }
 
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent event) {
+    @Override public boolean onSingleTapConfirmed(MotionEvent event) {
         Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + event.toString());
 
         if (correctAction == 0) {
-            score = 0;
-            scoreText.setText("Score: " + score);
-            start();
+//            score = 0;
+//            scoreText.setText("Score: " + score);
+//            start();
+
+            Intent intent = new Intent(Game.this, Highscores.class);
+            startActivity(intent);
         }
         else {
             resolve(1);
