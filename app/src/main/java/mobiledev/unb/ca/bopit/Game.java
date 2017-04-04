@@ -257,13 +257,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + event.toString());
 
         if (correctAction == 0) {
-//            score = 0;
-//            scoreText.setText("Score: " + score);
-//            start();
-
-            Intent intent = new Intent(Game.this, Highscores.class);
+            Intent intent = new Intent(Game.this, PostGame.class);
             intent.putExtra("newScore", score);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
         else {
