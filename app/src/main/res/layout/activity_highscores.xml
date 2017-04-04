@@ -11,4 +11,95 @@
     tools:context="mobiledev.unb.ca.bopit.Highscores"
     android:background="@drawable/background">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HIGHSCORES"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:id="@+id/textView7"
+        android:layout_marginTop="29dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textView7"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:id="@+id/relativeLayout">
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/hs1"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs2"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs1"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs3"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs2"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs4"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs3"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs5"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs4"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs6"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs5"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs7"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs6"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs8"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs7"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs9"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs8"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/hs10"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/hs9"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

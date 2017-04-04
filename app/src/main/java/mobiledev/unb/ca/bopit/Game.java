@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+
+import java.util.List;
 import java.util.Random;
 
 import android.view.View;
@@ -28,6 +30,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener{
 
     private static final String DEBUG_TAG = "DEBUG";
+    private DBHelper mDBHelper;
     private GestureDetectorCompat mDetector;
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -42,6 +45,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
     private MediaPlayer mp1;
     private ImageView star;
     private ImageView bVolume;
+    private int upper_timer = 3000;
+    private int lower_timer = 1000;
 
 
     @Override
@@ -49,6 +54,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         mDetector = new GestureDetectorCompat(this,this);
+        mDBHelper = new DBHelper(this);
 
         // Set the gesture detector as the double tap listener.
         mDetector.setOnDoubleTapListener(this);
@@ -93,16 +99,18 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         correctAction = r.nextInt(6) + 1; //1-5
 
         // 3 seconds - why is this timer shit
-        timer = new CountDownTimer(3000, 1000) {
+        timer = new CountDownTimer(upper_timer, 100) {
             TextView timeLeft = (TextView) findViewById(R.id.timer);
             public void onTick(long millisUntilFinished) {
-                timeLeft.setText("" + millisUntilFinished/1000);
+                long value = Math.abs((millisUntilFinished)/100);
+                timeLeft.setText("" + value);
             }
 
             public void onFinish() {
                 timeLeft.setText("" + 0);
                 //comment this out for testing. removes timer
                 resolve(0);
+
             }
         }.start();
 
@@ -158,6 +166,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 
         // congrats!
         if (userAction == correctAction) {
+            upper_timer = (upper_timer > lower_timer) ? upper_timer-50 : upper_timer;
             scoretimer.start();
             score += 10;
             scoreText.setText("Score: " + score);
@@ -172,7 +181,25 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
             img_view.setImageResource(R.drawable.wrong);
             correctAction = 0; // indicates game over
         }
+    }
 
+    public void achievedHighscore() {
+        List<Highscore> hsList = mDBHelper.getAllHighscores();
+        int hsCount = mDBHelper.getHighscoreCount(); //total # highscores
+        int minScore = (hsCount >= 10) ? hsList.get(hsCount-1).getScore() : 0; //lowest highscore on leaderboard
+        if ( (hsCount >= 10) && (score > minScore) ) { //need to delete
+            mDBHelper.deleteHighscore(hsList.get(hsCount-1));
+        }
+        if (score > minScore) {
+            Intent intent = new Intent(Game.this, NewHighscore.class);
+            intent.putExtra("newScore", score);
+            startActivity(intent);
+        }
+        else {
+            Intent intent = new Intent(Game.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -257,9 +284,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + event.toString());
 
         if (correctAction == 0) {
-            Intent intent = new Intent(Game.this, PostGame.class);
-            intent.putExtra("newScore", score);
-            startActivity(intent);
+            achievedHighscore();
         }
         else {
             resolve(1);

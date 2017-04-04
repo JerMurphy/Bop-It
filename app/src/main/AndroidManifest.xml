@@ -17,6 +17,7 @@
         </activity>
         <activity android:name="mobiledev.unb.ca.bopit.Game"></activity>
         <activity android:name="mobiledev.unb.ca.bopit.Highscores"></activity>
+        <activity android:name="mobiledev.unb.ca.bopit.NewHighscore"></activity>
     </application>
 
 </manifest>

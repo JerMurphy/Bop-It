@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -25,14 +26,33 @@ public class Highscores extends Activity {
         setContentView(R.layout.activity_highscores);
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mDBHelper = new DBHelper(this);
+        TextView[] textViewArr = {
+                (TextView) findViewById(R.id.hs1),
+                (TextView) findViewById(R.id.hs2),
+                (TextView) findViewById(R.id.hs3),
+                (TextView) findViewById(R.id.hs4),
+                (TextView) findViewById(R.id.hs5),
+                (TextView) findViewById(R.id.hs6),
+                (TextView) findViewById(R.id.hs7),
+                (TextView) findViewById(R.id.hs8),
+                (TextView) findViewById(R.id.hs9),
+                (TextView) findViewById(R.id.hs10)};
 
-        viewHighscores();
+        viewHighscores(textViewArr);
     }
 
     // update the recycler view to show highscores
-    public void viewHighscores() {
+    public void viewHighscores(TextView[] textViewArr) {
         hsList = mDBHelper.getAllHighscores();
-        for (Highscore hs: hsList) {
+        hsCount = mDBHelper.getHighscoreCount();
+
+        for (int i = 0; i < hsCount; i++) {
+            Highscore hs = hsList.get(i);
+            String text = hs.getName() + ":\t" + hs.getScore();
+            textViewArr[i].setText(text);
+        }
+
+        for (Highscore hs : hsList) {
             String log = ("Id: " + hs.getId() + ", Name: " + hs.getName() + ", Score: " + hs.getScore());
             Log.d("Highscore", log);
         }
