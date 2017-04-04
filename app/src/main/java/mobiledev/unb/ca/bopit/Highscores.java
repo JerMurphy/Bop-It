@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
@@ -17,8 +18,6 @@ import java.util.List;
 public class Highscores extends Activity {
     private GestureDetectorCompat mDetector;
     private DBHelper mDBHelper;
-    private List<Highscore> hsList;
-    private int hsCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,35 +25,45 @@ public class Highscores extends Activity {
         setContentView(R.layout.activity_highscores);
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mDBHelper = new DBHelper(this);
-        TextView[] textViewArr = {
-                (TextView) findViewById(R.id.hs1),
-                (TextView) findViewById(R.id.hs2),
-                (TextView) findViewById(R.id.hs3),
-                (TextView) findViewById(R.id.hs4),
-                (TextView) findViewById(R.id.hs5),
-                (TextView) findViewById(R.id.hs6),
-                (TextView) findViewById(R.id.hs7),
-                (TextView) findViewById(R.id.hs8),
-                (TextView) findViewById(R.id.hs9),
-                (TextView) findViewById(R.id.hs10)};
 
-        viewHighscores(textViewArr);
+        DbCalls db = new DbCalls();
+        db.execute();
     }
 
-    // update the recycler view to show highscores
-    public void viewHighscores(TextView[] textViewArr) {
-        hsList = mDBHelper.getAllHighscores();
-        hsCount = mDBHelper.getHighscoreCount();
+    // argument
+    private class DbCalls extends AsyncTask<String, Void, Void> {
+        private List<Highscore> hsList;
+        private int hsCount;
 
-        for (int i = 0; i < hsCount; i++) {
-            Highscore hs = hsList.get(i);
-            String text = hs.getName() + ":\t" + hs.getScore();
-            textViewArr[i].setText(text);
+        @Override
+        protected Void doInBackground(String... strings) {
+            hsList = mDBHelper.getAllHighscores();
+            hsCount = mDBHelper.getHighscoreCount();
+
+            return null;
         }
 
-        for (Highscore hs : hsList) {
-            String log = ("Id: " + hs.getId() + ", Name: " + hs.getName() + ", Score: " + hs.getScore());
-            Log.d("Highscore", log);
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            TextView[] textViewArr = {
+                    (TextView) findViewById(R.id.hs1),
+                    (TextView) findViewById(R.id.hs2),
+                    (TextView) findViewById(R.id.hs3),
+                    (TextView) findViewById(R.id.hs4),
+                    (TextView) findViewById(R.id.hs5),
+                    (TextView) findViewById(R.id.hs6),
+                    (TextView) findViewById(R.id.hs7),
+                    (TextView) findViewById(R.id.hs8),
+                    (TextView) findViewById(R.id.hs9),
+                    (TextView) findViewById(R.id.hs10)};
+
+            for (int i = 0; i < hsCount; i++) {
+                Highscore hs = hsList.get(i);
+                String text = hs.getName() + ":\t" + hs.getScore();
+                textViewArr[i].setText(text);
+            }
+
+            super.onPostExecute(aVoid);
         }
     }
 
