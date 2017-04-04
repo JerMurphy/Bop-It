@@ -262,6 +262,8 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
 //            start();
 
             Intent intent = new Intent(Game.this, Highscores.class);
+            intent.putExtra("newScore", score);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
         else {
