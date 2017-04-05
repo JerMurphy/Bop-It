@@ -41,6 +41,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
     private TextView scoreText;
     private CountDownTimer timer;
     private CountDownTimer scoretimer;
+    private CountDownTimer failTimer;
     private MediaPlayer mp;
     private MediaPlayer mp1;
     private ImageView star;
@@ -176,10 +177,21 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         // you suck!
         else {
             TextView text = (TextView) findViewById(R.id.action_text);
-            text.setText("Click anywhere to continue!");
+            text.setText("");
             mp1.start();
             img_view.setImageResource(R.drawable.wrong);
-            correctAction = 0; // indicates game over
+            failTimer = new CountDownTimer(1000,100) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    achievedHighscore();
+                }
+            }.start();
+            //correctAction = 0; // indicates game over
         }
     }
 
@@ -284,7 +296,7 @@ public class Game extends Activity implements GestureDetector.OnGestureListener,
         Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + event.toString());
 
         if (correctAction == 0) {
-            achievedHighscore();
+            //achievedHighscore();
         }
         else {
             resolve(1);
